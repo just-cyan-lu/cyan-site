@@ -141,17 +141,20 @@ const Nav = () => {
       transition: background 0.4s ease;
     `}
   >
-    <div
+    <a
+      href="/"
       css={css`
         font-family: var(--font-mono);
         font-size: 1rem;
         font-weight: 500;
         letter-spacing: 0.05em;
         color: var(--color-text);
+        cursor: pointer;
+        text-decoration: none;
       `}
     >
       浮光<span css={css`color: var(--color-primary)`}></span>
-    </div>
+    </a>
     <div
       css={css`
         display: flex;

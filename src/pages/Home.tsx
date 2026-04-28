@@ -69,7 +69,7 @@ const DecoShapes = () => (
         width: 35vw;
         height: 35vw;
         border-radius: 50%;
-        border: 1px solid rgba(78,205,196,0.06);
+        border: 1px solid rgba(56,182,255,0.06);
         animation: float 16s ease-in-out infinite reverse;
       `}
     />
@@ -95,7 +95,7 @@ const DecoShapes = () => (
         right: 8%;
         width: 1px;
         height: 200px;
-        background: linear-gradient(to bottom, transparent, rgba(78,205,196,0.3), transparent);
+        background: linear-gradient(to bottom, transparent, rgba(56,182,255,0.3), transparent);
         animation: spin-slow 20s linear infinite;
         transform-origin: top center;
       `}
@@ -275,7 +275,7 @@ const Hero = () => {
             color: var(--color-secondary);
             margin-bottom: 1.5rem;
             padding: 0.4rem 1rem;
-            border: 1px solid rgba(78,205,196,0.25);
+            border: 1px solid rgba(56,182,255,0.25);
             border-radius: 100px;
           `}
         >

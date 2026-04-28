@@ -57,7 +57,7 @@ const DecoShapes = () => (
         width: 50vw;
         height: 50vw;
         border-radius: 50%;
-        border: 1px solid rgba(232,197,71,0.08);
+        border: 1px solid rgba(240,120,32,0.08);
         animation: float 12s ease-in-out infinite;
       `}
     />
@@ -82,7 +82,7 @@ const DecoShapes = () => (
         width: 40vw;
         height: 40vw;
         border-radius: 24px;
-        border: 1px solid rgba(232,197,71,0.06);
+        border: 1px solid rgba(240,120,32,0.06);
         transform: rotate(15deg);
         animation: float 14s ease-in-out infinite 2s;
       `}
@@ -110,7 +110,7 @@ const DecoShapes = () => (
         height: 4px;
         border-radius: 50%;
         background: var(--color-primary);
-        box-shadow: 0 0 12px 4px rgba(232,197,71,0.3);
+        box-shadow: 0 0 12px 4px rgba(240,120,32,0.3);
         animation: pulse-ring 3s ease-out infinite;
       `}
     />
@@ -150,7 +150,7 @@ const Nav = () => {
         color: var(--color-text);
       `}
     >
-      Cyan<span css={css`color: var(--color-primary)`}>.lu</span>
+      浮光<span css={css`color: var(--color-primary)`}></span>
     </div>
     <div
       css={css`
@@ -305,7 +305,7 @@ const Hero = () => {
             margin-bottom: 1.2rem;
           `}
         >
-          浮光<span css={css`color: var(--color-primary)`}>.Cyan</span>
+          浮光 · 掠影
         </motion.h1>
 
         {/* 副标题 */}
@@ -354,7 +354,7 @@ const Hero = () => {
               transition: transform 0.2s, box-shadow 0.2s;
               &:hover {
                 transform: translateY(-2px);
-                box-shadow: 0 8px 24px rgba(232,197,71,0.3);
+                box-shadow: 0 8px 24px rgba(240,120,32,0.3);
               }
             `}
           >
@@ -550,7 +550,7 @@ const Photography = () => {
       desc: '广州天河，傍晚六点的过街天桥',
       tag: '扫街',
       year: '2025',
-      color: '#e8c547',
+      color: '#f07820',
     },
     {
       title: '下午三点的光',
@@ -564,7 +564,7 @@ const Photography = () => {
       desc: '午后阳光穿过老骑楼的光影',
       tag: '扫街',
       year: '2025',
-      color: '#e8c547',
+      color: '#f07820',
     },
   ]
 

@@ -14,10 +14,10 @@
   --color-bg:         #111118;
   --color-surface:    #1a1a24;
   --color-surface-2:  #242434;
-  --color-primary:     #e8c547;
-  --color-secondary:   #4ecdc4;
-  --color-text:        #e8e8f0;
-  --color-text-muted:  #8888a0;
+  --color-primary:    #f07820;
+  --color-secondary:  #4ecdc4;
+  --color-text:       #e8e8f0;
+  --color-text-muted: #8888a0;
   --color-border:      #2a2a3a;
   --color-nav-bg:      rgba(17,17,24,0.75);
   --color-grain:       0.025;
@@ -29,14 +29,14 @@
   --color-bg:         #faf9f7;
   --color-surface:    #f0ede8;
   --color-surface-2:  #e8e3da;
-  --color-primary:     #d4a017;
-  --color-secondary:   #2aa198;
-  --color-text:        #1a1a2e;
-  --color-text-muted:  #6b6b80;
-  --color-border:      #d8d3cc;
-  --color-nav-bg:      rgba(250,249,247,0.80);
-  --color-grain:       0.012;
-  --color-shadow:      rgba(0,0,0,0.08);
+  --color-primary:    #e86c1a;
+  --color-secondary:  #2aa198;
+  --color-text:       #1a1a2e;
+  --color-text-muted: #6b6b80;
+  --color-border:     #d8d3cc;
+  --color-nav-bg:     rgba(250,249,247,0.80);
+  --color-grain:      0.012;
+  --color-shadow:     rgba(0,0,0,0.08);
 }
 
 /* ── 字体 ── */
@@ -49,9 +49,7 @@
   --radius-sm:   6px;
 }
 
-html {
-  scroll-behavior: smooth;
-}
+html { scroll-behavior: smooth; }
 
 body {
   background-color: var(--color-bg);
@@ -65,7 +63,6 @@ body {
   transition: background-color 0.4s ease, color 0.4s ease;
 }
 
-/* 胶片颗粒叠加 */
 body::after {
   content: '';
   position: fixed;
@@ -76,23 +73,11 @@ body::after {
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
 }
 
-/* 滚动条 */
 ::-webkit-scrollbar { width: 6px; }
 ::-webkit-scrollbar-track { background: var(--color-bg); }
 ::-webkit-scrollbar-thumb { background: var(--color-border); border-radius: 3px; }
 ::-webkit-scrollbar-thumb:hover { background: var(--color-text-muted); }
 
-/* 选中文本 */
-::selection {
-  background: var(--color-primary);
-  color: #000;
-}
-
-/* 链接 */
+::selection { background: var(--color-primary); color: #fff; }
 a { color: inherit; text-decoration: none; }
-
-/* 聚焦 */
-:focus-visible {
-  outline: 2px solid var(--color-primary);
-  outline-offset: 3px;
-}
+:focus-visible { outline: 2px solid var(--color-primary); outline-offset: 3px; }

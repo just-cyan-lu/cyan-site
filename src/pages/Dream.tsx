@@ -116,13 +116,13 @@ export default function Dream() {
               white-space: nowrap;
               transition: color 0.3s;
               opacity: ${i === activeIndex ? 1 : 0.5};
-              writing-mode: vertical-rl;
-              text-orientation: mixed;
-              max-height: 60px;
-              overflow: hidden;
+              // horizontal
+              // horizontal
+              // horizontal
+              font-size: 0.6rem; letter-spacing: 0.05em;
               &:hover { opacity: 1; color: var(--color-primary); }
             `}>
-              {entry.weekOf.replace('2026年第', 'W').replace('周', '')}
+              {entry.date.split('—')[0].replace('年', '-').replace('月', '-').replace('日', '')}
             </div>
           </button>
         ))}
@@ -207,7 +207,7 @@ const DreamItem = ({ entry, ref }: { entry: DreamEntry; ref: React.Ref<HTMLDivEl
     <div css={css`
       width: 100%;
       border-radius: var(--radius);
-      overflow: hidden;
+      font-size: 0.6rem; letter-spacing: 0.05em;
       margin-bottom: 2rem;
       border: 1px solid var(--color-border);
     `}>

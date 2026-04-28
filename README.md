@@ -34,6 +34,15 @@ pnpm build
 pnpm preview
 ```
 
+## 🌐 部署
+
+```bash
+# 构建 + 上传到服务器
+pnpm build && node /home/claw/.openclaw/workspace/scripts/upload_cyan.js
+```
+
+部署脚本会通过 SFTP 将 `dist/` 内容同步到服务器 `/data/website_cyan/`，并自动重载 nginx。
+
 ---
 
 ## 📁 项目结构

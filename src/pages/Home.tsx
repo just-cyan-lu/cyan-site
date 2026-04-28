@@ -2,6 +2,7 @@
 import { css, Global } from '@emotion/react'
 import { motion, useScroll, useTransform } from 'framer-motion'
 import { useRef } from 'react'
+import { useTheme } from '../contexts/ThemeContext'
 
 /* ─── 全局 keyframes ─────────────────────────── */
 const globalStyles = css`
@@ -117,7 +118,9 @@ const DecoShapes = () => (
 )
 
 /* ─── 导航栏 ─────────────────────────────────── */
-const Nav = () => (
+const Nav = () => {
+  const { theme, toggle } = useTheme()
+  return (
   <motion.nav
     initial={{ y: -60, opacity: 0 }}
     animate={{ y: 0, opacity: 1 }}
@@ -133,8 +136,9 @@ const Nav = () => (
       align-items: center;
       justify-content: space-between;
       backdrop-filter: blur(16px);
-      background: rgba(17,17,24,0.7);
-      border-bottom: 1px solid rgba(255,255,255,0.04);
+      background: var(--color-nav-bg);
+      border-bottom: 1px solid var(--color-border);
+      transition: background 0.4s ease;
     `}
   >
     <div
@@ -151,27 +155,82 @@ const Nav = () => (
     <div
       css={css`
         display: flex;
-        gap: 2rem;
-        font-size: 0.875rem;
-        color: var(--color-text-muted);
-        font-family: var(--font-mono);
+        align-items: center;
+        gap: 1.5rem;
       `}
     >
-      {['About', 'Photography', 'Contact'].map((item) => (
-        <a
-          key={item}
-          href={`#${item.toLowerCase()}`}
-          css={css`
-            transition: color 0.2s;
-            &:hover { color: var(--color-text); }
-          `}
-        >
-          {item}
-        </a>
-      ))}
+      <div
+        css={css`
+          display: flex;
+          gap: 2rem;
+          font-size: 0.875rem;
+          color: var(--color-text-muted);
+          font-family: var(--font-mono);
+        `}
+      >
+        {['About', 'Photography', 'Contact'].map((item) => (
+          <a
+            key={item}
+            href={`#${item.toLowerCase()}`}
+            css={css`
+              transition: color 0.2s;
+              &:hover { color: var(--color-text); }
+            `}
+          >
+            {item}
+          </a>
+        ))}
+      </div>
+
+      {/* 主题切换按钮 */}
+      <button
+        onClick={toggle}
+        title={theme === 'light' ? '切换暗色' : '切换亮色'}
+        aria-label="切换主题"
+        css={css`
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          width: 34px;
+          height: 34px;
+          border: 1px solid var(--color-border);
+          border-radius: 50%;
+          background: var(--color-surface);
+          color: var(--color-text-muted);
+          cursor: pointer;
+          transition: border-color 0.2s, color 0.2s, transform 0.2s;
+          &:hover {
+            border-color: var(--color-primary);
+            color: var(--color-primary);
+            transform: scale(1.1);
+          }
+          &:active { transform: scale(0.95); }
+        `}
+      >
+        {theme === 'light' ? (
+          /* 月亮图标 — 暗色 */
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>
+          </svg>
+        ) : (
+          /* 太阳图标 — 亮色 */
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+            <circle cx="12" cy="12" r="5"/>
+            <line x1="12" y1="1" x2="12" y2="3"/>
+            <line x1="12" y1="21" x2="12" y2="23"/>
+            <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+            <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+            <line x1="1" y1="12" x2="3" y2="12"/>
+            <line x1="21" y1="12" x2="23" y2="12"/>
+            <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+            <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+          </svg>
+        )}
+      </button>
     </div>
   </motion.nav>
-)
+  )
+}
 
 /* ─── Hero ───────────────────────────────────── */
 const Hero = () => {

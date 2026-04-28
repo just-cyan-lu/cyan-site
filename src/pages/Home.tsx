@@ -557,7 +557,7 @@ const Photography = () => {
       desc: '地铁里一个男孩望向远方的瞬间',
       tag: '人像',
       year: '2025',
-      color: '#4ecdc4',
+      color: '#38b6ff',
     },
     {
       title: '光',

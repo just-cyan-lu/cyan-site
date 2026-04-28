@@ -557,7 +557,7 @@ const GuangYing = () => {
     },
     {
       title: '下午三点的光',
-      desc: '地铁里一个男孩望向远方的瞬间',
+      desc: '地铁里，望向远方的瞬间',
       tag: '人像',
       year: '2025',
       color: '#38b6ff',

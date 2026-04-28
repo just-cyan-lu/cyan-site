@@ -26,7 +26,6 @@ export default function Dream() {
       .catch(() => setLoading(false))
   }, [])
 
-  // 监听滚动，高亮当前期
   useEffect(() => {
     if (entries.length === 0) return
     const observers: IntersectionObserver[] = []
@@ -34,9 +33,7 @@ export default function Dream() {
       const el = itemRefs.current[i]
       if (!el) return
       const obs = new IntersectionObserver(
-        ([entry]) => {
-          if (entry.isIntersecting) setActiveIndex(i)
-        },
+        ([entry]) => { if (entry.isIntersecting) setActiveIndex(i) },
         { threshold: 0.4 }
       )
       obs.observe(el)
@@ -49,21 +46,28 @@ export default function Dream() {
     itemRefs.current[i]?.scrollIntoView({ behavior: 'smooth', block: 'start' })
   }
 
+  function fmtDate(dateStr: string) {
+    // "2026年04月21日—04月28日" → "2026-04-21"
+    const m = dateStr.match(/(\d{4})年(\d{2})月(\d{2})日/)
+    if (m) return `${m[1]}-${m[2]}-${m[3]}`
+    return dateStr.split('—')[0].replace('年', '-').replace('月', '-').replace('日', '')
+  }
+
   return (
     <div css={css`position: relative;`}>
-      {/* ── 左侧时间轴 ── */}
+      {/* ── 右侧时间轴 ── */}
       <div
         css={css`
           position: fixed;
-          left: 2.5rem;
+          right: 2.5rem;
           top: 50%;
           transform: translateY(-50%);
           z-index: 50;
           display: flex;
           flex-direction: column;
-          align-items: center;
+          align-items: flex-start;
           gap: 0;
-          @media (max-width: 900px) {
+          @media (max-width: 1100px) {
             display: none;
           }
         `}
@@ -71,6 +75,7 @@ export default function Dream() {
         {/* 竖线 */}
         <div css={css`
           position: absolute;
+          left: 5px;
           top: 12px;
           bottom: 12px;
           width: 1px;
@@ -86,62 +91,54 @@ export default function Dream() {
               position: relative;
               z-index: 1;
               display: flex;
-              flex-direction: column;
               align-items: center;
-              gap: 0.3rem;
+              gap: 0.6rem;
               background: none;
               border: none;
               cursor: pointer;
-              padding: 0.8rem 0;
+              padding: 0.7rem 0;
             `}
           >
             {/* 圆点 */}
             <div css={css`
-              width: 12px;
-              height: 12px;
+              width: 10px;
+              height: 10px;
               border-radius: 50%;
-              background: ${i === activeIndex ? 'var(--color-primary)' : 'var(--color-bg)'};              border: 2px solid ${i === activeIndex ? 'var(--color-primary)' : 'var(--color-border)'};              transition: all 0.3s ease;
-              box-shadow: ${i === activeIndex ? `0 0 0 3px rgba(240,120,32,0.2), 0 0 12px rgba(240,120,32,0.4)` : 'none'};
-              &:hover {
-                border-color: var(--color-primary);
-                transform: scale(1.2);
-              }
+              flex-shrink: 0;
+              background: ${i === activeIndex ? 'var(--color-primary)' : 'var(--color-bg)'};
+              border: 2px solid ${i === activeIndex ? 'var(--color-primary)' : 'var(--color-border)'};
+              transition: all 0.3s ease;
+              box-shadow: ${i === activeIndex ? `0 0 0 3px rgba(240,120,32,0.15), 0 0 8px rgba(240,120,32,0.3)` : 'none'};
+              &:hover { border-color: var(--color-primary); transform: scale(1.3); }
             `}/>
-            {/* 周标签 */}
-            <div css={css`
+            {/* 日期标签（右侧，横向） */}
+            <span css={css`
               font-family: var(--font-mono);
-              font-size: 0.6rem;
+              font-size: 0.62rem;
               color: ${i === activeIndex ? 'var(--color-primary)' : 'var(--color-text-muted)'};
-              letter-spacing: 0.05em;
+              letter-spacing: 0.06em;
               white-space: nowrap;
               transition: color 0.3s;
-              opacity: ${i === activeIndex ? 1 : 0.5};
-              // horizontal
-              // horizontal
-              // horizontal
-              font-size: 0.6rem; letter-spacing: 0.05em;
+              opacity: ${i === activeIndex ? 1 : 0.6};
               &:hover { opacity: 1; color: var(--color-primary); }
             `}>
-              {entry.date.split('—')[0].replace('年', '-').replace('月', '-').replace('日', '')}
-            </div>
+              {fmtDate(entry.date)}
+            </span>
           </button>
         ))}
       </div>
 
-      {/* ── 右侧内容 ── */}
-      <div
-        css={css`
-          min-height: 100vh;
-          background: var(--color-bg);
-          color: var(--color-text);
-          transition: background 0.4s ease;
-        `}
-      >
+      {/* ── 页面内容 ── */}
+      <div css={css`
+        background: var(--color-bg);
+        color: var(--color-text);
+        transition: background 0.4s ease;
+      `}>
         {/* 页头 */}
         <div css={css`
-          max-width: 680px;
+          max-width: 820px;
           margin: 0 auto;
-          padding: 5rem 2rem 3rem;
+          padding: 5rem 2rem 2rem;
         `}>
           <div css={css`
             font-family: var(--font-serif);
@@ -163,89 +160,149 @@ export default function Dream() {
           </div>
         </div>
 
-        {/* 每期 */}
-        <div css={css`max-width: 680px; margin: 0 auto; padding: 0 2rem 6rem;`}>
+        {/* 列表 */}
+        <div css={css`
+          max-width: 820px;
+          margin: 0 auto;
+          padding: 1rem 2rem 6rem;
+        `}>
           {loading ? (
             <LoadingSkeleton />
           ) : entries.length === 0 ? (
             <EmptyState />
-          ) : (
-            entries.map((entry, i) => (
-              <DreamItem
-                key={entry.weekOf}
-                entry={entry}
-                ref={el => { itemRefs.current[i] = el }}
-              />
-            ))
-          )}
+          ) : entries.map((entry, i) => (
+            <DreamItem
+              key={entry.weekOf}
+              entry={entry}
+              ref={el => { itemRefs.current[i] = el }}
+              isLast={i === entries.length - 1}
+            />
+          ))}
         </div>
       </div>
     </div>
   )
 }
 
-const DreamItem = ({ entry, ref }: { entry: DreamEntry; ref: React.Ref<HTMLDivElement> }) => (
+function fmtDate(dateStr: string) {
+  const m = dateStr.match(/(\d{4})年(\d{2})月(\d{2})日/)
+  if (m) return `${m[1]}-${m[2]}-${m[3]}`
+  return dateStr.split('—')[0].replace('年', '-').replace('月', '-').replace('日', '')
+}
+
+const DreamItem = (
+  { entry, ref, isLast }: { entry: DreamEntry; ref: React.Ref<HTMLDivElement>; isLast: boolean }
+) => (
   <div
     ref={ref}
     css={css`
-      padding: 1rem 0 5rem;
+      position: relative;
+      padding-bottom: 4rem;
     `}
   >
-    {/* 标签 */}
-    <div css={css`
-      font-family: var(--font-mono);
-      font-size: 0.7rem;
-      color: var(--color-primary);
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      margin-bottom: 1rem;
-    `}>
-      {entry.weekOf}
-    </div>
+    {/* 分隔装饰 */}
+    {!isLast && (
+      <div css={css`
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        margin-bottom: 3.5rem;
+      `}>
+        <div css={css`flex: 1; height: 1px; background: linear-gradient(to right, var(--color-border), transparent);`}/>
+        <div css={css`
+          font-family: var(--font-mono);
+          font-size: 0.6rem;
+          color: var(--color-text-muted);
+          letter-spacing: 0.2em;
+          opacity: 0.4;
+          user-select: none;
+        `}>
+          · · ·
+        </div>
+        <div css={css`flex: 1; height: 1px; background: linear-gradient(to left, var(--color-border), transparent);`}/>
+      </div>
+    )}
 
-    {/* 图片 */}
+    {/* 内容卡片 */}
     <div css={css`
-      width: 100%;
-      border-radius: var(--radius);
-      font-size: 0.6rem; letter-spacing: 0.05em;
-      margin-bottom: 2rem;
+      background: var(--color-surface);
       border: 1px solid var(--color-border);
+      border-radius: var(--radius);
+      overflow: hidden;
+      transition: border-color 0.3s;
+      &:hover { border-color: rgba(240,120,32,0.3); }
     `}>
-      <img
-        src={entry.imageUrl}
-        alt={entry.weekOf}
-        css={css`
-          width: 100%;
-          height: auto;
-          display: block;
-          transition: transform 0.5s ease;
-          &:hover { transform: scale(1.02); }
-        `}
-        onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
-      />
-    </div>
+      {/* 顶部色条 */}
+      <div css={css`
+        height: 3px;
+        background: linear-gradient(to right, var(--color-primary), var(--color-secondary));
+      `}/>
 
-    {/* 碎碎念 */}
-    <div css={css`
-      font-family: var(--font-sans);
-      font-size: clamp(1rem, 2vw, 1.1rem);
-      line-height: 2.2;
-      color: var(--color-text);
-      font-weight: 300;
-      white-space: pre-wrap;
-    `}>
-      {entry.text}
-    </div>
+      {/* 图片 */}
+      <div css={css`
+        width: 100%;
+        height: 340px;
+        overflow: hidden;
+        background: var(--color-surface-2);
+        @media (max-width: 600px) {
+          height: 220px;
+        }
+      `}>
+        <img
+          src={entry.imageUrl}
+          alt={entry.weekOf}
+          css={css`
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 0.5s ease;
+            &:hover { transform: scale(1.04); }
+          `}
+          onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
+        />
+      </div>
 
-    {/* 日期 */}
-    <div css={css`
-      margin-top: 2rem;
-      font-family: var(--font-mono);
-      font-size: 0.7rem;
-      color: var(--color-text-muted);
-      letter-spacing: 0.08em;
-    `}>
-      {entry.date}
+      {/* 文字 */}
+      <div css={css`padding: 2rem 2.5rem;`}>
+        {/* 周标签 */}
+        <div css={css`
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          margin-bottom: 1.2rem;
+        `}>
+          <div css={css`
+            font-family: var(--font-mono);
+            font-size: 0.7rem;
+            color: var(--color-primary);
+            letter-spacing: 0.12em;
+            text-transform: uppercase;
+          `}>
+            {entry.weekOf}
+          </div>
+          <div css={css`
+            font-family: var(--font-mono);
+            font-size: 0.65rem;
+            color: var(--color-text-muted);
+            letter-spacing: 0.06em;
+          `}>
+            {fmtDate(entry.date)}
+          </div>
+        </div>
+
+        {/* 碎碎念 */}
+        <div css={css`
+          font-family: var(--font-sans);
+          font-size: clamp(0.95rem, 1.8vw, 1.05rem);
+          line-height: 2.3;
+          color: var(--color-text);
+          font-weight: 300;
+          white-space: pre-wrap;
+        `}>
+          {entry.text}
+        </div>
+      </div>
     </div>
   </div>
 )
@@ -254,12 +311,22 @@ function LoadingSkeleton() {
   return (
     <div css={css`display: flex; flex-direction: column; gap: 3rem; padding-top: 1rem;`}>
       {[0, 1].map(i => (
-        <div key={i} css={css`animation: pulse 2s ease-in-out infinite ${i * 0.2}s; @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }`}>
-          <div css={css`height: 12px; width: 60px; background: var(--color-surface); border-radius: 4px; margin-bottom: 1rem;`}/>
-          <div css={css`height: 320px; background: var(--color-surface); border-radius: var(--radius); margin-bottom: 2rem;`}/>
-          {[90, 78, 85, 70].map((w, j) => (
-            <div key={j} css={css`height: 16px; width: ${w}%; background: var(--color-surface); border-radius: 4px; margin-bottom: 0.6rem;`}/>
-          ))}
+        <div key={i} css={css`
+          background: var(--color-surface);
+          border: 1px solid var(--color-border);
+          border-radius: var(--radius);
+          overflow: hidden;
+          animation: pulse 2s ease-in-out infinite ${i * 0.2}s;
+          @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }
+        `}>
+          <div css={css`height: 3px; background: linear-gradient(to right, var(--color-primary), var(--color-secondary));`}/>
+          <div css={css`height: 340px; background: var(--color-surface-2);`}/>
+          <div css={css`padding: 2rem;`}>
+            <div css={css`height: 10px; width: 30%; background: var(--color-surface-2); border-radius: 4px; margin-bottom: 1.2rem;`}/>
+            {[90, 80, 85, 72].map((w, j) => (
+              <div key={j} css={css`height: 15px; width: ${w}%; background: var(--color-surface-2); border-radius: 4px; margin-bottom: 0.6rem;`}/>
+            ))}
+          </div>
         </div>
       ))}
     </div>

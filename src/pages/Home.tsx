@@ -246,7 +246,7 @@ const Hero = () => {
             margin-bottom: 1.2rem;
           `}
         >
-          浮光<span css={css`color: var(--color-primary)`}>.lu</span>
+          浮光<span css={css`color: var(--color-primary)`}>.Cyan</span>
         </motion.h1>
 
         {/* 副标题 */}
@@ -407,7 +407,7 @@ const About = () => (
             line-height: 1.8;
           `}
         >
-          ENFP · 19岁 · 南方<br />
+          ENFP · 17岁 · 南方<br />
           扫街 / 人像 / 代码<br />
           追求「日常里的光」
         </p>
@@ -495,7 +495,7 @@ const Photography = () => {
     },
     {
       title: '下午三点的光',
-      desc: '地铁站里一个女孩望向远方的瞬间',
+      desc: '地铁里一个男孩望向远方的瞬间',
       tag: '人像',
       year: '2025',
       color: '#4ecdc4',

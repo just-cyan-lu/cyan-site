@@ -180,6 +180,19 @@ const Nav = () => {
             {item}
           </a>
         ))}
+        <a
+          href="/dream"
+          css={css`
+            font-family: var(--font-mono);
+            font-size: 0.875rem;
+            color: var(--color-secondary);
+            transition: opacity 0.2s;
+            &:hover { opacity: 0.7; }
+          `}
+          title="本周梦"
+        >
+          梦
+        </a>
       </div>
 
       {/* 主题切换按钮 */}
@@ -483,7 +496,7 @@ const About = () => (
             font-weight: 300;
           `}
         >
-          嗨，我是陆思源，圈内叫我 <strong css={css`color: var(--color-primary); font-weight: 500;`}>Cyan</strong>。
+          嗨，我是陆思源，可以叫我 <strong css={css`color: var(--color-primary); font-weight: 500;`}>Cyan</strong>。
         </p>
         <p
           css={css`

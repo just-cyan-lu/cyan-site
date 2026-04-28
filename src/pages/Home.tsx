@@ -246,7 +246,7 @@ const Hero = () => {
             margin-bottom: 1.2rem;
           `}
         >
-          凝固<span css={css`color: var(--color-primary)`}>·</span>瞬间
+          浮光<span css={css`color: var(--color-primary)`}>.lu</span>
         </motion.h1>
 
         {/* 副标题 */}
@@ -263,8 +263,8 @@ const Hero = () => {
             font-weight: 300;
           `}
         >
-          用快门定格生活，用代码构建想象。<br />
-          迷恋一切「被凝固」的瞬间。
+          用镜头收藏日常，<br />
+          用代码编织想法。
         </motion.p>
 
         {/* CTA 按钮 */}
@@ -409,7 +409,7 @@ const About = () => (
         >
           ENFP · 19岁 · 南方<br />
           扫街 / 人像 / 代码<br />
-          追求「定格瞬间」的质感
+          追求「日常里的光」
         </p>
       </div>
 
@@ -435,7 +435,7 @@ const About = () => (
             font-weight: 300;
           `}
         >
-          我喜欢拿着相机在城市里游走，寻找那些稍纵即逝的光影和表情——按下快门的那一刻，整个世界凝固，非常奇妙。
+          我喜欢拿着相机在城市里游走，寻找那些让人想停留的光影和表情。拍照这件事对我来说，是把日常里的某个瞬间收藏起来，回头看的时候还能想起那天的心情。
         </p>
         <p
           css={css`
@@ -445,7 +445,7 @@ const About = () => (
             font-weight: 300;
           `}
         >
-          同时我也是前端萌新，正在用 React 和各种创意工具把脑海里的想法变成现实。代码和摄影对我而言是同一种事——<em css={css`font-style: normal; color: var(--color-text);`}>捕捉，构建，定格。</em>
+          同时我也是前端萌新，正在用 React 和各种创意工具把脑海里的想法变成现实。代码和摄影对我而言是同一种事——<em css={css`font-style: normal; color: var(--color-text);`}>捕捉，创造，记录。</em>
         </p>
 
         {/* 标签列表 */}
@@ -457,7 +457,7 @@ const About = () => (
             margin-top: 2rem;
           `}
         >
-          {['扫街', '人像', 'React', 'Vite', 'Framer Motion', 'ENFP', '胶片感', '定格'].map((tag) => (
+          {['扫街', '人像', 'React', 'Vite', 'Framer Motion', 'ENFP', '胶片感', '日常'].map((tag) => (
             <span
               key={tag}
               css={css`
@@ -494,7 +494,7 @@ const Photography = () => {
       color: '#e8c547',
     },
     {
-      title: '定格',
+      title: '下午三点的光',
       desc: '地铁站里一个女孩望向远方的瞬间',
       tag: '人像',
       year: '2025',
@@ -795,7 +795,7 @@ const Footer = () => (
         © {new Date().getFullYear()} 陆思源 <span css={css`color: var(--color-primary)`}>Cyan</span>
       </span>
       <span css={css`letter-spacing: 0.05em;`}>
-        用快门定格，用代码构建
+        用快门记录，用代码创造
       </span>
     </div>
   </footer>

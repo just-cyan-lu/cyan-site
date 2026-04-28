@@ -55,19 +55,28 @@ export default function Dream() {
       <div
         css={css`
           position: fixed;
-          left: 2rem;
+          left: 2.5rem;
           top: 50%;
           transform: translateY(-50%);
           z-index: 50;
           display: flex;
           flex-direction: column;
-          gap: 1.2rem;
           align-items: center;
+          gap: 0;
           @media (max-width: 900px) {
             display: none;
           }
         `}
       >
+        {/* 竖线 */}
+        <div css={css`
+          position: absolute;
+          top: 12px;
+          bottom: 12px;
+          width: 1px;
+          background: linear-gradient(to bottom, transparent, var(--color-border) 15%, var(--color-border) 85%, transparent);
+          z-index: 0;
+        `}/>
         {entries.map((entry, i) => (
           <button
             key={entry.weekOf}
@@ -75,21 +84,47 @@ export default function Dream() {
             title={entry.weekOf}
             css={css`
               position: relative;
-              width: 10px;
-              height: 10px;
-              border-radius: 50%;
+              z-index: 1;
+              display: flex;
+              flex-direction: column;
+              align-items: center;
+              gap: 0.3rem;
+              background: none;
               border: none;
               cursor: pointer;
-              background: ${i === activeIndex ? 'var(--color-primary)' : 'var(--color-border)'};
-              transition: background 0.3s, transform 0.3s;
-              transform: ${i === activeIndex ? 'scale(1.5)' : 'scale(1)'};
-              box-shadow: ${i === activeIndex ? '0 0 8px var(--color-primary)' : 'none'};
-              &:hover {
-                background: var(--color-primary);
-                transform: scale(1.4);
-              }
+              padding: 0.8rem 0;
             `}
-          />
+          >
+            {/* 圆点 */}
+            <div css={css`
+              width: 12px;
+              height: 12px;
+              border-radius: 50%;
+              background: ${i === activeIndex ? 'var(--color-primary)' : 'var(--color-bg)'};              border: 2px solid ${i === activeIndex ? 'var(--color-primary)' : 'var(--color-border)'};              transition: all 0.3s ease;
+              box-shadow: ${i === activeIndex ? `0 0 0 3px rgba(240,120,32,0.2), 0 0 12px rgba(240,120,32,0.4)` : 'none'};
+              &:hover {
+                border-color: var(--color-primary);
+                transform: scale(1.2);
+              }
+            `}/>
+            {/* 周标签 */}
+            <div css={css`
+              font-family: var(--font-mono);
+              font-size: 0.6rem;
+              color: ${i === activeIndex ? 'var(--color-primary)' : 'var(--color-text-muted)'};
+              letter-spacing: 0.05em;
+              white-space: nowrap;
+              transition: color 0.3s;
+              opacity: ${i === activeIndex ? 1 : 0.5};
+              writing-mode: vertical-rl;
+              text-orientation: mixed;
+              max-height: 60px;
+              overflow: hidden;
+              &:hover { opacity: 1; color: var(--color-primary); }
+            `}>
+              {entry.weekOf.replace('2026年第', 'W').replace('周', '')}
+            </div>
+          </button>
         ))}
       </div>
 

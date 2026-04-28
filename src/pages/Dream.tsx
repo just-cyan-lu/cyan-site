@@ -156,7 +156,7 @@ export default function Dream() {
             color: var(--color-text-muted);
             letter-spacing: 0.1em;
           `}>
-            {loading ? '加载中...' : `${entries.length} 期 · 每周日 10:10 自动更新`}
+            ' '
           </div>
         </div>
 
@@ -345,7 +345,7 @@ function EmptyState() {
     `}>
       <div css={css`font-size: 2rem; margin-bottom: 1rem; opacity: 0.3;`}>梦</div>
       <div>尚未生成</div>
-      <div css={css`margin-top: 0.5rem; font-size: 0.75rem; opacity: 0.6;`}>每周日 10:10 CST 自动更新</div>
+
     </div>
   )
 }

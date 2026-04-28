@@ -1,6 +1,6 @@
 /** @jsxImportSource @emotion/react */
 import { css } from '@emotion/react'
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 
 interface DreamEntry {
   text: string
@@ -11,7 +11,9 @@ interface DreamEntry {
 
 export default function Dream() {
   const [entries, setEntries] = useState<DreamEntry[]>([])
+  const [activeIndex, setActiveIndex] = useState(0)
   const [loading, setLoading] = useState(true)
+  const itemRefs = useRef<(HTMLDivElement | null)[]>([])
 
   useEffect(() => {
     fetch('/dream.json')
@@ -24,221 +26,205 @@ export default function Dream() {
       .catch(() => setLoading(false))
   }, [])
 
-  return (
-    <div
-      css={css`
-        min-height: 100vh;
-        background: var(--color-bg);
-        color: var(--color-text);
-        padding-top: 5rem;
-        padding-bottom: 6rem;
-        transition: background 0.4s ease;
-      `}
-    >
-      {/* 标题 */}
-      <div css={css`
-        max-width: 720px;
-        margin: 0 auto;
-        padding: 4rem 2rem 3rem;
-      `}>
-        <div css={css`
-          font-family: var(--font-serif);
-          font-size: clamp(2rem, 6vw, 3.5rem);
-          font-weight: 700;
-          letter-spacing: -0.02em;
-          color: var(--color-text);
-          margin-bottom: 0.3rem;
-        `}>
-          三千凡梦
-        </div>
-        <div css={css`
-          font-family: var(--font-mono);
-          font-size: 0.75rem;
-          color: var(--color-text-muted);
-          letter-spacing: 0.1em;
-        `}>
-          {loading ? '加载中...' : `${entries.length} 期`}
-        </div>
-      </div>
-
-      {/* 时间线 */}
-      <div css={css`
-        max-width: 720px;
-        margin: 0 auto;
-        padding: 0 2rem;
-        position: relative;
-      `}>
-        {/* 竖线 */}
-        <div css={css`
-          position: absolute;
-          left: 50%;
-          top: 0;
-          bottom: 0;
-          width: 1px;
-          background: var(--color-border);
-          transform: translateX(-50%);
-          @media (max-width: 600px) {
-            left: 20px;
-          }
-        `}/>
-
-        {loading ? (
-          <TimelineSkeleton />
-        ) : entries.length === 0 ? (
-          <EmptyState />
-        ) : (
-          entries.map((entry, i) => (
-            <TimelineItem key={entry.weekOf} entry={entry} index={i} />
-          ))
-        )}
-      </div>
-    </div>
-  )
-}
-
-function TimelineItem({ entry, index }: { entry: DreamEntry; index: number }) {
-  const isLeft = index % 2 === 0
-  const [visible, setVisible] = useState(false)
-
+  // 监听滚动，高亮当前期
   useEffect(() => {
-    const t = setTimeout(() => setVisible(true), 100 + index * 150)
-    return () => clearTimeout(t)
-  }, [index])
+    if (entries.length === 0) return
+    const observers: IntersectionObserver[] = []
+    entries.forEach((_, i) => {
+      const el = itemRefs.current[i]
+      if (!el) return
+      const obs = new IntersectionObserver(
+        ([entry]) => {
+          if (entry.isIntersecting) setActiveIndex(i)
+        },
+        { threshold: 0.4 }
+      )
+      obs.observe(el)
+      observers.push(obs)
+    })
+    return () => observers.forEach(o => o.disconnect())
+  }, [entries])
+
+  function scrollTo(i: number) {
+    itemRefs.current[i]?.scrollIntoView({ behavior: 'smooth', block: 'start' })
+  }
 
   return (
-    <div
-      css={css`
-        display: flex;
-        align-items: flex-start;
-        margin-bottom: 4rem;
-        opacity: ${visible ? 1 : 0};
-        transform: translateY(${visible ? '0' : '24px'});
-        transition: opacity 0.6s ease, transform 0.6s ease;
-        @media (max-width: 600px) {
-          flex-direction: row !important;
-          margin-left: 40px !important;
-          margin-right: 0 !important;
-        }
-      `}
-      style={{
-        flexDirection: isLeft ? 'row' : 'row-reverse',
-        marginLeft: isLeft ? '0' : '50%',
-        marginRight: isLeft ? '50%' : '0',
-        paddingLeft: isLeft ? '2.5rem' : '0',
-        paddingRight: isLeft ? '0' : '2.5rem',
-      }}
-    >
-      {/* 中间节点 */}
-      <div css={css`
-        position: absolute;
-        left: 50%;
-        top: 1.5rem;
-        width: 10px;
-        height: 10px;
-        border-radius: 50%;
-        background: var(--color-primary);
-        transform: translateX(-50%);
-        box-shadow: 0 0 12px var(--color-primary);
-        @media (max-width: 600px) {
-          left: 20px;
-        }
-      `}/>
-
-      {/* 内容卡片 */}
+    <div css={css`position: relative;`}>
+      {/* ── 左侧时间轴 ── */}
       <div
         css={css`
-          width: 100%;
-          background: var(--color-surface);
-          border: 1px solid var(--color-border);
-          border-radius: var(--radius);
-          overflow: hidden;
-          transition: border-color 0.3s;
-          &:hover { border-color: var(--color-primary); }
+          position: fixed;
+          left: 2rem;
+          top: 50%;
+          transform: translateY(-50%);
+          z-index: 50;
+          display: flex;
+          flex-direction: column;
+          gap: 1.2rem;
+          align-items: center;
+          @media (max-width: 900px) {
+            display: none;
+          }
         `}
       >
-        {/* 图片 */}
-        <div css={css`
-          width: 100%;
-          height: 240px;
-          overflow: hidden;
-          background: var(--color-surface-2);
-        `}>
-          <img
-            src={entry.imageUrl}
-            alt={entry.weekOf}
+        {entries.map((entry, i) => (
+          <button
+            key={entry.weekOf}
+            onClick={() => scrollTo(i)}
+            title={entry.weekOf}
             css={css`
-              width: 100%;
-              height: 100%;
-              object-fit: cover;
-              display: block;
-              transition: transform 0.5s ease;
-              &:hover { transform: scale(1.03); }
+              position: relative;
+              width: 10px;
+              height: 10px;
+              border-radius: 50%;
+              border: none;
+              cursor: pointer;
+              background: ${i === activeIndex ? 'var(--color-primary)' : 'var(--color-border)'};
+              transition: background 0.3s, transform 0.3s;
+              transform: ${i === activeIndex ? 'scale(1.5)' : 'scale(1)'};
+              box-shadow: ${i === activeIndex ? '0 0 8px var(--color-primary)' : 'none'};
+              &:hover {
+                background: var(--color-primary);
+                transform: scale(1.4);
+              }
             `}
-            onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
           />
-        </div>
+        ))}
+      </div>
 
-        {/* 文字 */}
-        <div css={css`padding: 1.5rem;`}>
-          {/* 日期 */}
+      {/* ── 右侧内容 ── */}
+      <div
+        css={css`
+          min-height: 100vh;
+          background: var(--color-bg);
+          color: var(--color-text);
+          transition: background 0.4s ease;
+        `}
+      >
+        {/* 页头 */}
+        <div css={css`
+          max-width: 680px;
+          margin: 0 auto;
+          padding: 5rem 2rem 3rem;
+        `}>
+          <div css={css`
+            font-family: var(--font-serif);
+            font-size: clamp(2rem, 6vw, 3.5rem);
+            font-weight: 700;
+            letter-spacing: -0.02em;
+            color: var(--color-text);
+            margin-bottom: 0.3rem;
+          `}>
+            三千凡梦
+          </div>
           <div css={css`
             font-family: var(--font-mono);
-            font-size: 0.7rem;
+            font-size: 0.75rem;
             color: var(--color-text-muted);
-            letter-spacing: 0.08em;
-            margin-bottom: 1rem;
+            letter-spacing: 0.1em;
           `}>
-            {entry.weekOf} · {entry.date}
+            {loading ? '加载中...' : `${entries.length} 期 · 每周日 10:10 自动更新`}
           </div>
+        </div>
 
-          {/* 碎碎念 */}
-          <div css={css`
-            font-family: var(--font-sans);
-            font-size: clamp(0.9rem, 1.8vw, 1rem);
-            line-height: 2.1;
-            color: var(--color-text);
-            font-weight: 300;
-            white-space: pre-wrap;
-          `}>
-            {entry.text}
-          </div>
+        {/* 每期 */}
+        <div css={css`max-width: 680px; margin: 0 auto; padding: 0 2rem 6rem;`}>
+          {loading ? (
+            <LoadingSkeleton />
+          ) : entries.length === 0 ? (
+            <EmptyState />
+          ) : (
+            entries.map((entry, i) => (
+              <DreamItem
+                key={entry.weekOf}
+                entry={entry}
+                ref={el => { itemRefs.current[i] = el }}
+              />
+            ))
+          )}
         </div>
       </div>
     </div>
   )
 }
 
-function TimelineSkeleton() {
+const DreamItem = ({ entry, ref }: { entry: DreamEntry; ref: React.Ref<HTMLDivElement> }) => (
+  <div
+    ref={ref}
+    css={css`
+      padding: 1rem 0 5rem;
+    `}
+  >
+    {/* 标签 */}
+    <div css={css`
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--color-primary);
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    `}>
+      {entry.weekOf}
+    </div>
+
+    {/* 图片 */}
+    <div css={css`
+      width: 100%;
+      border-radius: var(--radius);
+      overflow: hidden;
+      margin-bottom: 2rem;
+      border: 1px solid var(--color-border);
+    `}>
+      <img
+        src={entry.imageUrl}
+        alt={entry.weekOf}
+        css={css`
+          width: 100%;
+          height: auto;
+          display: block;
+          transition: transform 0.5s ease;
+          &:hover { transform: scale(1.02); }
+        `}
+        onError={(e) => { (e.target as HTMLImageElement).style.display = 'none' }}
+      />
+    </div>
+
+    {/* 碎碎念 */}
+    <div css={css`
+      font-family: var(--font-sans);
+      font-size: clamp(1rem, 2vw, 1.1rem);
+      line-height: 2.2;
+      color: var(--color-text);
+      font-weight: 300;
+      white-space: pre-wrap;
+    `}>
+      {entry.text}
+    </div>
+
+    {/* 日期 */}
+    <div css={css`
+      margin-top: 2rem;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--color-text-muted);
+      letter-spacing: 0.08em;
+    `}>
+      {entry.date}
+    </div>
+  </div>
+)
+
+function LoadingSkeleton() {
   return (
-    <div css={css`display: flex; flex-direction: column; gap: 4rem;`}>
+    <div css={css`display: flex; flex-direction: column; gap: 3rem; padding-top: 1rem;`}>
       {[0, 1].map(i => (
-        <div key={i} css={css`margin-left: ${i % 2 === 0 ? 0 : '50%'};`}>
-          <div css={css`
-            background: var(--color-surface);
-            border-radius: var(--radius);
-            overflow: hidden;
-            animation: pulse 2s ease-in-out infinite ${i * 0.2}s;
-            @keyframes pulse {
-              0%, 100% { opacity: 1; }
-              50% { opacity: 0.4; }
-            }
-          `}>
-            <div css={css`height: 240px; background: var(--color-surface-2);`}/>
-            <div css={css`padding: 1.5rem;`}>
-              <div css={css`height: 12px; width: 40%; background: var(--color-surface-2); border-radius: 4px; margin-bottom: 1rem;`}/>
-              {[90, 75, 85].map((w, j) => (
-                <div key={j} css={css`
-                  height: 14px; width: ${w}%; background: var(--color-surface-2);
-                  border-radius: 4px; margin-bottom: 0.5rem;
-                  animation: pulse 2s ease-in-out infinite ${i * 0.2 + j * 0.1}s;
-                  @keyframes pulse {
-                    0%, 100% { opacity: 1; }
-                    50% { opacity: 0.4; }
-                  }
-                `}/>
-              ))}
-            </div>
-          </div>
+        <div key={i} css={css`animation: pulse 2s ease-in-out infinite ${i * 0.2}s; @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.4} }`}>
+          <div css={css`height: 12px; width: 60px; background: var(--color-surface); border-radius: 4px; margin-bottom: 1rem;`}/>
+          <div css={css`height: 320px; background: var(--color-surface); border-radius: var(--radius); margin-bottom: 2rem;`}/>
+          {[90, 78, 85, 70].map((w, j) => (
+            <div key={j} css={css`height: 16px; width: ${w}%; background: var(--color-surface); border-radius: 4px; margin-bottom: 0.6rem;`}/>
+          ))}
         </div>
       ))}
     </div>
@@ -249,13 +235,15 @@ function EmptyState() {
   return (
     <div css={css`
       text-align: center;
-      padding: 4rem 0;
+      padding: 5rem 0;
       color: var(--color-text-muted);
       font-family: var(--font-mono);
       font-size: 0.85rem;
+      line-height: 2;
     `}>
       <div css={css`font-size: 2rem; margin-bottom: 1rem; opacity: 0.3;`}>梦</div>
       <div>尚未生成</div>
+      <div css={css`margin-top: 0.5rem; font-size: 0.75rem; opacity: 0.6;`}>每周日 10:10 CST 自动更新</div>
     </div>
   )
 }

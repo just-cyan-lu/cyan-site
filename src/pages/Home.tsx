@@ -168,18 +168,8 @@ const Nav = () => {
           font-family: var(--font-mono);
         `}
       >
-        {['About', 'Photography', 'Contact'].map((item) => (
-          <a
-            key={item}
-            href={`#${item.toLowerCase()}`}
-            css={css`
-              transition: color 0.2s;
-              &:hover { color: var(--color-text); }
-            `}
-          >
-            {item}
-          </a>
-        ))}
+        {[/* 独白 */<a key="独白" href="#独白" css={css`transition: color 0.2s; &:hover { color: var(--color-text); }`}>独白</a>, /* 光影 */<a key="光影" href="#光影" css={css`transition: color 0.2s; &:hover { color: var(--color-text); }`}>光影</a>, /* 此刻 */<a key="此刻" href="#此刻" css={css`transition: color 0.2s; &:hover { color: var(--color-text); }`}>此刻</a>]}
+        
         <a
           href="/dream"
           css={css`
@@ -352,7 +342,7 @@ const Hero = () => {
           `}
         >
           <a
-            href="#photography"
+            href="#光影"
             css={css`
               display: inline-flex;
               align-items: center;
@@ -374,7 +364,7 @@ const Hero = () => {
             看看作品 →
           </a>
           <a
-            href="#about"
+            href="#独白"
             css={css`
               display: inline-flex;
               align-items: center;
@@ -432,9 +422,9 @@ const Hero = () => {
 }
 
 /* ─── About ─────────────────────────────────── */
-const About = () => (
+const DuBai = () => (
   <section
-    id="about"
+    id="独白"
     css={css`
       ${sectionCss}
       padding: 8rem 2rem;
@@ -556,7 +546,7 @@ const About = () => (
 )
 
 /* ─── Photography ───────────────────────────── */
-const Photography = () => {
+const GuangYing = () => {
   const works = [
     {
       title: '城市黄昏',
@@ -583,7 +573,7 @@ const Photography = () => {
 
   return (
     <section
-      id="photography"
+      id="光影"
       css={css`
         ${sectionCss}
         padding: 6rem 2rem 8rem;
@@ -742,9 +732,9 @@ const Photography = () => {
 }
 
 /* ─── Contact ───────────────────────────────── */
-const Contact = () => (
+const CiKe = () => (
   <section
-    id="contact"
+    id="此刻"
     css={css`
       ${sectionCss}
       padding: 6rem 2rem 8rem;
@@ -881,9 +871,9 @@ export default function Home() {
       <DecoShapes />
       <Nav />
       <Hero />
-      <About />
-      <Photography />
-      <Contact />
+      <DuBai />
+      <GuangYing />
+      <CiKe />
       <Footer />
     </>
   )

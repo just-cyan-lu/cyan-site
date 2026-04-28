@@ -189,7 +189,7 @@ const Nav = () => {
             transition: opacity 0.2s;
             &:hover { opacity: 0.7; }
           `}
-          title="本周梦"
+          title="dream"
         >
           梦
         </a>

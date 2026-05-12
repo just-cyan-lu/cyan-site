@@ -2,7 +2,7 @@
 
 > 陆思源的个人网站 — 摄影 · 代码 · 创意
 
-**域名：** `cyan.roco.fun`
+**域名：** `cyan.roco.fun` [陆思源的个人网站](https://cyan.roco.fun)
 
 ---
 
